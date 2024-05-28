@@ -8,6 +8,25 @@ enum Status {
     Done,
 }
 
+impl std::convert::TryFrom<String> for Status {
+    type Error = String;
+    fn try_from(s: String) -> Result<Self, Self::Error> {
+        (&s[..]).try_into()
+    }
+}
+
+impl std::convert::TryFrom<&str> for Status {
+    type Error = String;
+    fn try_from(s: &str) -> Result<Self, Self::Error> {
+        match &(*s.to_lowercase()) {
+            "todo" => Ok(Status::ToDo),
+            "inprogress" => Ok(Status::InProgress),
+            "done" => Ok(Status::Done),
+            _ => Err("Invalid string".into())
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
