@@ -25,12 +25,12 @@ pub fn launch() -> Sender<Command> {
 pub fn server(receiver: Receiver<Command>) {
     let mut store = store::TicketStore::new();
     loop {
-        let command = receiver.recv().unwrap();
-        match command {
-            Command::Insert(draft) => {
+        match receiver.recv() {
+            Ok(Command::Insert(draft)) => {
                 store.add_ticket(draft);
             }
-            Command::Exit => break
+            Ok(Command::Exit) => break,
+            Err(_) => break
         }
     }    
 }
